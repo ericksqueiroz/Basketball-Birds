@@ -6,8 +6,8 @@ _W = display.contentWidth
 _H = display.contentHeight
 
 -- Adiciona música em loop
---bgSound = audio.loadStream("sounds/menu.mp3")
---mySong = audio.play( bgSound, { channel = 1, loops = -1 } )
+bgSound1 = audio.loadStream("sounds/menu.mp3")
+mySong1 = audio.play( bgSound1, { channel = 1, loops = -1 } )
 
 --Adiciona o background
 local background = display.newImage("images/menubg.jpg")
@@ -30,7 +30,7 @@ local start = display.newImage("images/start.png")
 
 local function start_game()
 	storyboard.gotoScene("game")
-	audio.stop()
+	audio.stop( mySong1 )
 end	
 start:addEventListener("tap", start_game)
 
@@ -49,42 +49,12 @@ local settingsbg = display.newImage("images/settingsbg.png")
   settingsbg.yScale = 0.9
   settingsbg.alpha = 0
 
-local soundon = display.newImage("images/soundon.png")
-  soundon.x = _W/2
-  soundon.y = _H/2+200
-  soundon.xScale = 0.8
-  soundon.yScale = 0.8
-  soundon.alpha = 0  
-
-local soundoff = display.newImage("images/soundoff.png")
-  soundoff.x = _W/2
-  soundoff.y = _H/2+200
-  soundoff.xScale = 0.8
-  soundoff.yScale = 0.8
-  soundoff.alpha = 0    
-
---Função para tirar o som no menu de pause
-local function muteGame()  
-    soundon.alpha = 0
-    soundoff.alpha = 1
-  end 
-soundon:addEventListener("tap", muteGame)
-
-local function unmuteGame()  
-    soundon.alpha = 1
-    soundoff.alpha = 0
-  end 
-soundoff:addEventListener("tap", unmuteGame)  
-
 function settingsMenu()
   if settingsbg.alpha == 0 then
   	settingsbg.alpha = 1 
-  	soundon.alpha = 1
   	start.alpha = 0
   else	
   	settingsbg.alpha = 0
-  	soundon.alpha = 0
-  	soundoff.alpha = 0
   	start.alpha = 1
   end	
 end

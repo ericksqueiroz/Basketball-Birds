@@ -1,7 +1,7 @@
 --Adiciona física e gravidade
 local fisica = require("physics")
 fisica.start()
---fisica.setDrawMode("hybrid")
+fisica.setDrawMode("hybrid")
 
 --Requisita o storyboard e cria uma nova cena
 local storyboard = require("storyboard")
@@ -234,7 +234,7 @@ local function pauseGame()
     restart.alpha = 1
     menu.alpha = 1
     soundon.alpha = 1
-    audio.stop(1)
+    audio.stop()
     paused = true 
   end 
 end 
