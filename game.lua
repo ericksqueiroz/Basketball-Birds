@@ -1,7 +1,7 @@
 --Adiciona física e gravidade
 local fisica = require("physics")
 fisica.start()
-fisica.setDrawMode("hybrid")
+--fisica.setDrawMode("hybrid")
 
 --Requisita o storyboard e cria uma nova cena
 local storyboard = require("storyboard")
@@ -46,30 +46,37 @@ local direita = display.newRect (_W, 0, 0, _H*2)
 
 --Adiciona a bola de basquete
 local ball = display.newImage("images/ball.png")
-  fisica.addBody(ball, "dynamic", {radius = 45, density=0, friction=1, bounce=0.5})
+  fisica.addBody(ball, "dynamic", {radius = 35, density=0, friction=1, bounce=0.5})
   ball.x = _W/2   
-  ball.y = _H-50  
+  ball.y = _H-50 
+  ball.xScale = 0.7
+  ball.yScale = 0.7 
 
---Adiciona física ajustada ao personagem via physics editor
-local physicsData = (require "basket_physics").physicsData(1.0)
+local physics_body = {}
+physics_body["basket"] = {
+    {
+        --LeftArm
+        density = 10, friction = 10, bounce = 0.15, 
+        shape = {-40, 50, -55, 50, -60, -55, -80, -55}
+    },
+    {
+        --RightArm
+        density = 10, friction = 10, bounce = 0.15, 
+        shape = {40, 50, 55, 50, 60, -55, 80, -55}
+    }
+}  
 
 --Adiciona as cestas de basquete
 local basket = display.newImage("images/basket.png")
-	fisica.addBody(basket, "static", {radius=0, density=0, friction=1, bounce=0.5}, physicsData:get("basket"))
+	fisica.addBody(basket, "static", unpack(physics_body["basket"]))
 	basket.y = _H/5
 
---Adiciona física ajustada ao personagem via physics editor
-local physicsData = (require "basket2_physics").physicsData(1.0)  
-
 local basket2 = display.newImage("images/basket.png")
-	fisica.addBody(basket2, "static", {radius=0, density=0, friction=1, bounce=0.5}, physicsData:get("basket2"))
-	basket2.y = _H-550
-
---Adiciona física ajustada ao personagem via physics editor
-local physicsData = (require "basket3_physics").physicsData(1.0)    
+	fisica.addBody(basket2, "static", unpack(physics_body["basket"]))
+	basket2.y = _H-550  
 
 local basket3 = display.newImage("images/basket.png")
-	fisica.addBody(basket3, "static", {radius=0, density=0, friction=1, bounce=0.5}, physicsData:get("basket3"))
+	fisica.addBody(basket3, "static", unpack(physics_body["basket"]))
 	basket3.y = _H-350
 
 --Função para mover as cestas de basquete
@@ -92,12 +99,14 @@ end
 move_basket3( basket3 )
 
 --Adiciona o pássaro vermelho
-local sheet1 = graphics.newImageSheet( "images/bird2.png", { width=125, height=125, numFrames=4 } )
+local sheet1 = graphics.newImageSheet( "images/bird2.png", { width=125, height=85, numFrames=4 } )
 
 --Cria o sprite do pássaro vermelho
 local instance1 = display.newSprite( sheet1, { name="bird", start=1, count=4, time=500 } )
-  fisica.addBody(instance1, "static", {radius=50, density=0, friction=1, bounce=0.5})
-  instance1.y = _H/2+50
+  fisica.addBody(instance1, "static", {radius=40, density=0, friction=1, bounce=0.5})
+  instance1.y = _H/2+30
+  instance1.xScale = 0.9
+  instance1.yScale = 0.9
   instance1:play()
 
 local function move_bird( bird )
@@ -107,12 +116,14 @@ end
 move_bird( instance1 )
 
 --Adiciona o pássaro azul
-local sheet2 = graphics.newImageSheet( "images/bird3.png", { width=125, height=125, numFrames=4 } )
+local sheet2 = graphics.newImageSheet( "images/bird3.png", { width=125, height=85, numFrames=4 } )
 
 --Cria o sprite do pássaro azul
 local instance2 = display.newSprite( sheet2, { name="bird2", start=1, count=4, time=500 } )
-  fisica.addBody(instance2, "static", {radius=50, density=0, friction=1, bounce=0.5})
-  instance2.y = _H/2-150
+  fisica.addBody(instance2, "static", {radius=40, density=0, friction=1, bounce=0.5})
+  instance2.y = _H/2-180
+  instance2.xScale = 0.9
+  instance2.yScale = 0.9
   instance2:play()
 
 local function move_bird2( bird )
