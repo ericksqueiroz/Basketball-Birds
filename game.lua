@@ -13,8 +13,8 @@ _H = display.contentHeight
 system.activate("multitouch")
 
 --Adiciona som ao game
-bgSound = audio.loadStream("sounds/game.mp3")
-mySong = audio.play(bgSound)
+--bgSound = audio.loadStream("sounds/game.mp3")
+--mySong = audio.play(bgSound)
 
 --Adiciona o background
 local background = display.newImage("images/background.jpg")
@@ -28,8 +28,33 @@ local pause = display.newImage("images/pause.png")
   pause.xScale = 0.7
   pause.yScale = 0.7
 
+--Adiciona física de pontuação das cestas
+local fisicacesta1 = display.newRect (_W-399, _H/5-30, 90, 1)  
+  fisica.addBody(fisicacesta1, "kinematic")
+  fisicacesta1.isSensor = true    
+
+local fisicacesta2 = display.newRect (_W-150, _H-550-30 , 90, 1)  
+  fisica.addBody(fisicacesta2, "kinematic")
+  fisicacesta2.isSensor = true    
+
+local fisicacesta3 = display.newRect (_W-399, _H-350-30, 90, 1)  
+  fisica.addBody(fisicacesta3, "kinematic")
+  fisicacesta3.isSensor = true  
+
+--Fisica da parte de baixo das cestas
+local fisicabaixo1 = display.newRect (_W-399, _H/5+50, 90, 1)  
+  fisica.addBody(fisicabaixo1, "static")
+
+local fisicabaixo2 = display.newRect (_W-150, _H/2-20, 90, 1)  
+  fisica.addBody(fisicabaixo2, "static")
+
+local fisicabaixo3 = display.newRect (_W-399, _H-300, 90, 1)  
+  fisica.addBody(fisicabaixo3, "static")              
+
 --Adiciona o contador de score
-display.newText("Score: 0", 80, _H-25, sansSerif, 40)
+local score = 0
+local scoreNumber = display.newText(score, 145, _H-23, sansSerif, 40)
+local scoreText = display.newText("Score:", 65, _H-25, sansSerif, 40)
 
 --Adiciona as paredes, o chão e o teto
 local chao = display.newRect (0, _H, _W*2, 0)
@@ -46,12 +71,36 @@ local direita = display.newRect (_W, 0, 0, _H*2)
 
 --Adiciona a bola de basquete
 local ball = display.newImage("images/ball.png")
-  fisica.addBody(ball, "dynamic", {radius = 35, density=0, friction=1, bounce=0.5})
+  fisica.addBody(ball, "dynamic", {radius = 30, density=0, friction=1, bounce=0.5})
   ball.x = _W/2   
   ball.y = _H-50 
   ball.xScale = 0.7
   ball.yScale = 0.7 
 
+--Função que incrementa a pontuação das cestas  
+local function onLocalCollision( self, event )
+    if event.other == fisicacesta1 then
+        scoreNumber.text = tostring(tonumber(scoreNumber.text) + 3)
+        fisicabaixo1.isSensor = true
+    end
+    if event.other == fisicacesta2 then
+        scoreNumber.text = tostring(tonumber(scoreNumber.text) + 2)
+        fisicabaixo2.isSensor = true
+    end
+    if event.other == fisicacesta3 then
+        scoreNumber.text = tostring(tonumber(scoreNumber.text) + 1)
+        fisicabaixo3.isSensor = true
+    end
+    if event.other == chao then
+      fisicabaixo1.isSensor = false
+      fisicabaixo2.isSensor = false
+      fisicabaixo3.isSensor = false
+    end  
+end
+ball.collision = onLocalCollision
+ball:addEventListener( "collision", ball )  
+
+--Física da cesta
 local physics_body = {}
 physics_body["basket"] = {
     {
@@ -69,34 +118,18 @@ physics_body["basket"] = {
 --Adiciona as cestas de basquete
 local basket = display.newImage("images/basket.png")
 	fisica.addBody(basket, "static", unpack(physics_body["basket"]))
+  basket.x = _W-399
 	basket.y = _H/5
 
 local basket2 = display.newImage("images/basket.png")
 	fisica.addBody(basket2, "static", unpack(physics_body["basket"]))
+  basket2.x = _W-150
 	basket2.y = _H-550  
 
 local basket3 = display.newImage("images/basket.png")
 	fisica.addBody(basket3, "static", unpack(physics_body["basket"]))
+  basket3.x = _W-399
 	basket3.y = _H-350
-
---Função para mover as cestas de basquete
-local function move_basket( basket )
-	basket.x = -100
-	transition.to( basket, {x=0+_W+100, time=3000, onComplete=move_basket} )
-end
-move_basket( basket )
-
-local function move_basket2( basket2 )
-	basket2.x = _W+100
-	transition.to( basket2, {x=400-800, time=6000, onComplete=move_basket2} )
-end
-move_basket2( basket2 )
-
-local function move_basket3( basket3 )
-	basket3.x = -100
-	transition.to( basket3, {x=0+800, time=10000, onComplete=move_basket3} )
-end
-move_basket3( basket3 )
 
 --Adiciona o pássaro vermelho
 local sheet1 = graphics.newImageSheet( "images/bird2.png", { width=125, height=85, numFrames=4 } )
@@ -110,7 +143,7 @@ local instance1 = display.newSprite( sheet1, { name="bird", start=1, count=4, ti
   instance1:play()
 
 local function move_bird( bird )
-  instance1.x = -100
+  instance1.x = -500
   transition.to( instance1, {x=400+800, time=7000, onComplete=move_bird} )
 end
 move_bird( instance1 )
@@ -315,7 +348,7 @@ function timerDown()
     menu.alpha = 0
     soundon.alpha = 0
     soundoff.alpha = 0
-    audio.stop(1)
+    audio.stop()
    end
 end
 timer.performWithDelay(1000, timerDown, number)
