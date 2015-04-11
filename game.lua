@@ -13,8 +13,8 @@ _H = display.contentHeight
 system.activate("multitouch")
 
 --Adiciona som ao game
---bgSound = audio.loadStream("sounds/game.mp3")
---mySong = audio.play(bgSound)
+bgSound = audio.loadStream("sounds/game.mp3")
+mySong = audio.play(bgSound)
 
 --Adiciona o background
 local background = display.newImage("images/background.jpg")
@@ -79,6 +79,7 @@ local ball = display.newImage("images/ball.png")
 
 --Função que incrementa a pontuação das cestas  
 local function onLocalCollision( self, event )
+  if ( event.phase == "began" ) then
     if event.other == fisicacesta1 then
         scoreNumber.text = tostring(tonumber(scoreNumber.text) + 3)
         fisicabaixo1.isSensor = true
@@ -88,14 +89,15 @@ local function onLocalCollision( self, event )
         fisicabaixo2.isSensor = true
     end
     if event.other == fisicacesta3 then
-        scoreNumber.text = tostring(tonumber(scoreNumber.text) + 1)
+        scoreNumber.text = tostring(tonumber(scoreNumber.text) + 1 )
         fisicabaixo3.isSensor = true
     end
     if event.other == chao then
       fisicabaixo1.isSensor = false
       fisicabaixo2.isSensor = false
       fisicabaixo3.isSensor = false
-    end  
+    end 
+  end  
 end
 ball.collision = onLocalCollision
 ball:addEventListener( "collision", ball )  
@@ -308,8 +310,7 @@ resume:addEventListener("tap", resumeGame)
 local tempo = display.newText( "2:00", 0, 0, sansSerif, 50 )   
    tempo.x = _W/2
    tempo.y = _H/35
-   tempo:setTextColor( 255, 255, 255 )
-
+   
 local number = 120
 local modf = math.modf
 
@@ -323,13 +324,14 @@ function timerDown()
   local start_hours = modf(start_minutes/60)
   local minutes     = start_minutes - start_hours*60
 
-  local start_days  = modf(start_hours/24)
-  local hours       = start_hours - start_days*24
-
   local min = minutes < 10 and (minutes) or minutes
   local sec = seconds < 10 and ("0".. seconds) or seconds
 
   tempo.text = min .. ":" .. sec
+
+  if number < 11 then
+    tempo:setTextColor( 1, 0, 0 )
+  end  
 
   if(number == 0)then
 	  display.newText("TIME OUT", _W/2, _H/2, sansSerif, 100)
