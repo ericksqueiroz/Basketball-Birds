@@ -21,6 +21,22 @@ local background = display.newImage("images/background.jpg")
 	background.x = _W/2
 	background.y = _H/2
 
+--Adiciona imagens de valores às cestas
+local um = display.newImage("images/1.png")
+  um.x = _W-405
+  um.y = _H-450
+  um.alpha = 0.3   
+
+local dois = display.newImage("images/2.png")
+  dois.x = _W-150
+  dois.y = _H/2-160
+  dois.alpha = 0.3  
+
+local tres = display.newImage("images/3.png")
+  tres.x = _W-399
+  tres.y = 100
+  tres.alpha = 0.3  
+
 --Adiciona o botão de pausa
 local pause = display.newImage("images/pause.png")
   pause.x = _W-30
@@ -29,27 +45,31 @@ local pause = display.newImage("images/pause.png")
   pause.yScale = 0.7
 
 --Adiciona física de pontuação das cestas
-local fisicacesta1 = display.newRect (_W-399, _H/5-30, 90, 1)  
+local fisicacesta1 = display.newRect (_W-399, _H/5-30, 90, 0)  
   fisica.addBody(fisicacesta1, "kinematic")
   fisicacesta1.isSensor = true    
 
-local fisicacesta2 = display.newRect (_W-150, _H-550-30 , 90, 1)  
+local fisicacesta2 = display.newRect (_W-150, _H-550-30 , 90, 0)  
   fisica.addBody(fisicacesta2, "kinematic")
   fisicacesta2.isSensor = true    
 
-local fisicacesta3 = display.newRect (_W-399, _H-350-30, 90, 1)  
+local fisicacesta3 = display.newRect (_W-399, _H-350-30, 90, 0)  
   fisica.addBody(fisicacesta3, "kinematic")
   fisicacesta3.isSensor = true  
 
 --Fisica da parte de baixo das cestas
-local fisicabaixo1 = display.newRect (_W-399, _H/5+50, 90, 1)  
+local fisicabaixo1 = display.newRect (_W-399, _H/5+50, 90, 0)  
   fisica.addBody(fisicabaixo1, "static")
 
-local fisicabaixo2 = display.newRect (_W-150, _H/2-20, 90, 1)  
+local fisicabaixo2 = display.newRect (_W-150, _H/2-20, 90, 0)  
   fisica.addBody(fisicabaixo2, "static")
 
-local fisicabaixo3 = display.newRect (_W-399, _H-300, 90, 1)  
-  fisica.addBody(fisicabaixo3, "static")              
+local fisicabaixo3 = display.newRect (_W-399, _H-300, 90, 0)  
+  fisica.addBody(fisicabaixo3, "static")  
+
+local ballfloor = display.newRect (_W/2, _H-100, 90, 0)  
+  physics.addBody(ballfloor, "static") 
+  ballfloor.isSensor = false                            
 
 --Adiciona o contador de score
 local score = 0
@@ -71,9 +91,9 @@ local direita = display.newRect (_W, 0, 0, _H*2)
 
 --Adiciona a bola de basquete
 local ball = display.newImage("images/ball.png")
-  fisica.addBody(ball, "dynamic", {radius = 30, density=0, friction=1, bounce=0.5})
+  fisica.addBody(ball, "dynamic", {radius = 30, density=0.05, friction=1, bounce=0.5})
   ball.x = _W/2   
-  ball.y = _H-50 
+  ball.y = _H-130 
   ball.xScale = 0.7
   ball.yScale = 0.7 
 
@@ -96,6 +116,10 @@ local function onLocalCollision( self, event )
       fisicabaixo1.isSensor = false
       fisicabaixo2.isSensor = false
       fisicabaixo3.isSensor = false
+      ballfloor.isSensor = false
+      timer.performWithDelay( 300, resetaBola)
+      ball:setLinearVelocity( 0, 0 )
+      ball.angularVelocity = 0
     end 
   end  
 end
@@ -167,47 +191,55 @@ local function move_bird2( bird )
 end
 move_bird2( instance2 )
 
---Função para arrastar a bola (função temporária)
-local function drag( event )
-    local ball = event.target
-     
-    local phase = event.phase
-    if "began" == phase then
-      display.getCurrentStage():setFocus( ball )
- 
-      -- Store initial position
-      ball.x0 = event.x - ball.x
-      ball.y0 = event.y - ball.y
-         
-      -- Avoid gravitational forces
-      event.target.bodyType = "kinematic"
-         
-      -- Stop current motion, if any
-      event.target:setLinearVelocity( 0, 0 )
-      event.target.angularVelocity = 0
- 
-    else
-        if "moved" == phase then
-          ball.x = event.x - ball.x0
-          ball.y = event.y - ball.y0
-        elseif "ended" == phase or "cancelled" == phase then
-          display.getCurrentStage():setFocus( nil )
-          event.target.bodyType = "dynamic"
-        end
-    end
- 
-    return true
-end
-ball:addEventListener("touch", drag)
+--Funcao para resetar a bola:
+  function resetaBola()
+    ball.x = _W/2 
+    ball.y = _H - 130
+  end
 
---Função para aplicar um impulso linear na bola de basquete
-local onTouch = function (event)
-	if event.phase == "began" then		
-		ball:applyLinearImpulse (0, -3, event.x, event.y)
-		return true
-	end	
-end	
-Runtime:addEventListener("touch", onTouch)
+--Função para atirar a bola
+  function ball:touch(event)
+
+    local t = event.target
+    local phase = event.phase
+
+    if event.phase == "began" then
+
+      display.getCurrentStage():setFocus( t )
+      t.isFocus = true
+    
+      local showTarget = transition.to( target, { alpha=0.4, xScale=0.4, yScale=0.4, time=200 } )
+      myLine = nil
+
+    elseif t.isFocus then
+    
+      if event.phase == "moved" then
+  
+        if ( myLine ) then
+          myLine.parent:remove( myLine )
+        end
+      myLine = display.newLine( t.x,t.y, event.x,event.y )
+      myLine:setStrokeColor( 1, 1, 1, 50/255 )
+      myLine.strokeWidth = 10
+
+    elseif event.phase == "ended" or event.phase == "cancelled" then
+      
+      display.getCurrentStage():setFocus( nil )
+      t.isFocus = false
+            
+        if ( myLine ) then
+          myLine.parent:remove( myLine )
+          ballfloor.isSensor = true 
+        end
+          
+      --Golpei a bola:
+      local ballforce
+        t:applyForce( (t.x - event.x), (t.y - event.y), t.x, t.y )
+      end
+    end
+    return true
+  end
+  ball:addEventListener("touch", ball)
 
 --Adiciona o menu de pause
 local pausebg = display.newImage("images/pausebg.png")
@@ -293,7 +325,6 @@ local function resumeGame()
     transition.resume() 
     instance1:play()  
     instance2:play()
-    Runtime:addEventListener("touch", onTouch) 
     pausebg.alpha = 0
     resume.alpha = 0
     restart.alpha = 0 
@@ -350,6 +381,9 @@ function timerDown()
     menu.alpha = 0
     soundon.alpha = 0
     soundoff.alpha = 0
+    um.alpha = 0
+    dois.alpha = 0
+    tres.alpha = 0
     audio.stop()
    end
 end
