@@ -1,6 +1,7 @@
 --Adiciona física e gravidade
 local fisica = require("physics")
 fisica.start()
+physics.setGravity( 0, 15 )
 --fisica.setDrawMode("hybrid")
 
 --Requisita o storyboard e cria uma nova cena
@@ -9,8 +10,6 @@ local scene = storyboard.newScene()
 
 _W = display.contentWidth 
 _H = display.contentHeight
-
-system.activate("multitouch")
 
 --Adiciona som ao game
 bgSound = audio.loadStream("sounds/game.mp3")
@@ -23,17 +22,17 @@ local background = display.newImage("images/background.jpg")
 
 --Adiciona imagens de valores às cestas
 local um = display.newImage("images/1.png")
-  um.x = _W-405
+  um.x = 70
   um.y = _H-450
   um.alpha = 0.3   
 
 local dois = display.newImage("images/2.png")
-  dois.x = _W-150
+  dois.x = _W-80
   dois.y = _H/2-160
   dois.alpha = 0.3  
 
 local tres = display.newImage("images/3.png")
-  tres.x = _W-399
+  tres.x = 80
   tres.y = 100
   tres.alpha = 0.3  
 
@@ -45,26 +44,26 @@ local pause = display.newImage("images/pause.png")
   pause.yScale = 0.7
 
 --Adiciona física de pontuação das cestas
-local fisicacesta1 = display.newRect (_W-399, _H/5-30, 90, 0)  
+local fisicacesta1 = display.newRect (80, _H/5-30, 90, 0)  
   fisica.addBody(fisicacesta1, "kinematic")
   fisicacesta1.isSensor = true    
 
-local fisicacesta2 = display.newRect (_W-150, _H-550-30 , 90, 0)  
+local fisicacesta2 = display.newRect (_W-80, _H-550-30 , 90, 0)  
   fisica.addBody(fisicacesta2, "kinematic")
   fisicacesta2.isSensor = true    
 
-local fisicacesta3 = display.newRect (_W-399, _H-350-30, 90, 0)  
+local fisicacesta3 = display.newRect (80, _H-350-30, 90, 0)  
   fisica.addBody(fisicacesta3, "kinematic")
   fisicacesta3.isSensor = true  
 
 --Fisica da parte de baixo das cestas
-local fisicabaixo1 = display.newRect (_W-399, _H/5+50, 90, 0)  
+local fisicabaixo1 = display.newRect (80, _H/5+50, 90, 0)  
   fisica.addBody(fisicabaixo1, "static")
 
-local fisicabaixo2 = display.newRect (_W-150, _H/2-20, 90, 0)  
+local fisicabaixo2 = display.newRect (_W-80, _H/2-20, 90, 0)  
   fisica.addBody(fisicabaixo2, "static")
 
-local fisicabaixo3 = display.newRect (_W-399, _H-300, 90, 0)  
+local fisicabaixo3 = display.newRect (80, _H-300, 90, 0)  
   fisica.addBody(fisicabaixo3, "static")  
 
 local ballfloor = display.newRect (_W/2, _H-100, 90, 0)  
@@ -91,7 +90,7 @@ local direita = display.newRect (_W, 0, 0, _H*2)
 
 --Adiciona a bola de basquete
 local ball = display.newImage("images/ball.png")
-  fisica.addBody(ball, "dynamic", {radius = 30, density=0.05, friction=1, bounce=0.5})
+  fisica.addBody(ball, "dynamic", {radius = 30, density=0.04, friction=1, bounce=0.5})
   ball.x = _W/2   
   ball.y = _H-130 
   ball.xScale = 0.7
@@ -144,18 +143,119 @@ physics_body["basket"] = {
 --Adiciona as cestas de basquete
 local basket = display.newImage("images/basket.png")
 	fisica.addBody(basket, "static", unpack(physics_body["basket"]))
-  basket.x = _W-399
+  basket.x = 80
 	basket.y = _H/5
 
 local basket2 = display.newImage("images/basket.png")
 	fisica.addBody(basket2, "static", unpack(physics_body["basket"]))
-  basket2.x = _W-150
+  basket2.x = _W-80
 	basket2.y = _H-550  
 
 local basket3 = display.newImage("images/basket.png")
 	fisica.addBody(basket3, "static", unpack(physics_body["basket"]))
-  basket3.x = _W-399
+  basket3.x = 80
 	basket3.y = _H-350
+
+--Função para movimentar as cestas
+local function move_3()
+local move_3back = function()
+  transition.to( tres, {x=80, time=3000, onComplete=move_3} )
+end
+  transition.to( tres, {x=_W-80, time=3000, onComplete=move_3back} )
+end
+move_3()
+
+local function move_linha1()
+local move_linhaback1 = function()
+  transition.to( fisicacesta1, {x=80, time=3000, onComplete=move_linha1} )
+end
+  transition.to( fisicacesta1, {x=_W-80, time=3000, onComplete=move_linhaback1} )
+end
+move_linha1( fisicacesta1 )
+
+local function move_linhabaixo1()
+local move_linhabaixoback1 = function()
+  transition.to( fisicabaixo1, {x=80, time=3000, onComplete=move_linhabaixo1} )
+end
+  transition.to( fisicabaixo1, {x=_W-80, time=3000, onComplete=move_linhabaixoback1} )
+end
+move_linhabaixo1( fisicabaixo1 )
+
+local function move_basket1()
+local move_basketback1 = function()
+  transition.to( basket, {x=80, time=3000, onComplete=move_basket1} )
+end
+  transition.to( basket, {x=_W-80, time=3000, onComplete=move_basketback1} )
+end
+move_basket1( basket1 )  
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+local function move_2()
+local move_2back = function()
+  transition.to( dois, {x=_W-80, time=3000, onComplete=move_2} )
+end
+  transition.to( dois, {x=80, time=3000, onComplete=move_2back} )
+end
+move_2()
+
+local function move_linha2()
+local move_linhaback2 = function()
+  transition.to( fisicacesta2, {x=_W-80, time=3000, onComplete=move_linha2} )
+end
+  transition.to( fisicacesta2, {x=80, time=3000, onComplete=move_linhaback2} )
+end
+move_linha2()  
+
+local function move_linhabaixo2()
+local move_linhabaixoback2 = function()
+  transition.to( fisicabaixo2, {x=_W-80, time=3000, onComplete=move_linhabaixo2} )
+end
+  transition.to( fisicabaixo2, {x=80, time=3000, onComplete=move_linhabaixoback2} )
+end
+move_linhabaixo2() 
+
+local function move_basket2()
+local move_basketback2 = function()
+  transition.to( basket2, {x=_W-80, time=3000, onComplete=move_basket2} )
+end
+  transition.to( basket2, {x=80, time=3000, onComplete=move_basketback2} )
+end
+move_basket2()  
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+local function move_1()
+local move_1back = function()
+  transition.to( um, {x=70, time=3000, onComplete=move_1} )
+end
+  transition.to( um, {x=_W-90, time=3000, onComplete=move_1back} )
+end
+move_1()
+
+local function move_linha3()
+local move_linhaback3 = function()
+  transition.to( fisicacesta3, {x=80, time=3000, onComplete=move_linha3} )
+end
+  transition.to( fisicacesta3, {x=_W-80, time=3000, onComplete=move_linhaback3} )
+end
+move_linha3() 
+
+local function move_linhabaixo3()
+local move_linhabaixoback3 = function()
+  transition.to( fisicabaixo3, {x=80, time=3000, onComplete=move_linhabaixo3} )
+end
+  transition.to( fisicabaixo3, {x=_W-80, time=3000, onComplete=move_linhabaixoback3} )
+end
+move_linhabaixo3()
+
+local function move_basket3()
+local move_basketback3 = function()
+  transition.to( basket3, {x=80, time=3000, onComplete=move_basket3} )
+end
+  transition.to( basket3, {x=_W-80, time=3000, onComplete=move_basketback3} )
+end
+move_basket3()  
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
 
 --Adiciona o pássaro vermelho
 local sheet1 = graphics.newImageSheet( "images/bird2.png", { width=125, height=85, numFrames=4 } )
@@ -314,6 +414,7 @@ local function pauseGame()
     soundon.alpha = 1
     audio.stop()
     paused = true 
+    timer.pause(timerDown)
   end 
 end 
 pause:addEventListener("tap", pauseGame)
@@ -333,6 +434,7 @@ local function resumeGame()
     soundoff.alpha = 0
     audio.play(bgSound)
     paused = false
+    timer.resume(timerDown)
   end
 end
 resume:addEventListener("tap", resumeGame)
@@ -360,8 +462,10 @@ function timerDown()
 
   tempo.text = min .. ":" .. sec
 
-  if number < 11 then
+  if number == 10 then
     tempo:setTextColor( 1, 0, 0 )
+    countdown = audio.loadStream("sounds/contagem.mp3")
+    Song = audio.play(countdown)
   end  
 
   if(number == 0)then
@@ -373,21 +477,22 @@ function timerDown()
     display.remove(basket)
     display.remove(basket2)
     display.remove(basket3)
-    Runtime:removeEventListener("touch", onTouch)
+    display.remove(um)
+    display.remove(dois)
+    display.remove(tres)
+    display.remove(fisicacesta1)
+    display.remove(fisicabaixo1)
+    display.remove(fisicacesta2)
+    display.remove(fisicabaixo2)
+    display.remove(fisicacesta3)
+    display.remove(fisicabaixo3)
+    display.remove(fisicacesta1)
+    display.remove(ballfloor)
     pause:removeEventListener("tap", pauseGame)
-    pausebg.alpha = 0
-    resume.alpha = 0
-    restart.alpha = 0
-    menu.alpha = 0
-    soundon.alpha = 0
-    soundoff.alpha = 0
-    um.alpha = 0
-    dois.alpha = 0
-    tres.alpha = 0
     audio.stop()
    end
 end
-timer.performWithDelay(1000, timerDown, number)
+timerDown = timer.performWithDelay(1000, timerDown, number)
 
 return scene
 
