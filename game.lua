@@ -36,12 +36,20 @@ local tres = display.newImage("images/3.png")
   tres.y = 100
   tres.alpha = 0.3  
 
---Adiciona o botão de pausa
+--Adiciona o botão de pausa e de som
 local pause = display.newImage("images/pause.png")
   pause.x = _W-30
   pause.y = _H-30
-  pause.xScale = 0.7
-  pause.yScale = 0.7
+
+local soundon = display.newImage("images/soundon.png")
+  soundon.x = _W-90
+  soundon.y = _H-30
+  soundon.alpha = 1  
+
+local soundoff = display.newImage("images/soundoff.png")
+  soundoff.x = _W-90
+  soundoff.y = _H-30
+  soundoff.alpha = 0  
 
 --Adiciona física de pontuação das cestas
 local fisicacesta1 = display.newRect (80, _H/5-30, 90, 0)  
@@ -72,8 +80,8 @@ local ballfloor = display.newRect (_W/2, _H-100, 90, 0)
 
 --Adiciona o contador de score
 local score = 0
-local scoreNumber = display.newText(score, 145, _H-23, sansSerif, 40)
-local scoreText = display.newText("Score:", 65, _H-25, sansSerif, 40)
+local scoreNumber = display.newText(score, 142, _H-23, "DS-Digital", 50)
+local scoreText = display.newText("Score:", 65, _H-21, "DS-Digital", 40)
 
 --Adiciona as paredes, o chão e o teto
 local chao = display.newRect (0, _H, _W*2, 0)
@@ -370,30 +378,21 @@ local menu = display.newImage("images/menu.png")
   menu.yScale = 0.4
   menu.alpha = 0
 
-local soundon = display.newImage("images/soundon.png")
-  soundon.x = _W/2
-  soundon.y = _H/2+250
-  soundon.xScale = 0.9
-  soundon.yScale = 0.9
-  soundon.alpha = 0  
-
-local soundoff = display.newImage("images/soundoff.png")
-  soundoff.x = _W/2
-  soundoff.y = _H/2+250
-  soundoff.xScale = 0.9
-  soundoff.yScale = 0.9
-  soundoff.alpha = 0  
-
 --Função para tirar o som no menu de pause
+sound = true
 local function muteGame()  
+    sound = false
     soundon.alpha = 0
     soundoff.alpha = 1
+    audio.pause()
   end 
 soundon:addEventListener("tap", muteGame)
 
-local function unmuteGame()  
+local function unmuteGame()
+    sound = true  
     soundon.alpha = 1
     soundoff.alpha = 0
+    audio.resume()
   end 
 soundoff:addEventListener("tap", unmuteGame)
 
@@ -411,7 +410,6 @@ local function pauseGame()
     resume.alpha = 1
     restart.alpha = 1
     menu.alpha = 1
-    soundon.alpha = 1
     audio.stop()
     paused = true 
     timer.pause(timerDown)
@@ -430,8 +428,6 @@ local function resumeGame()
     resume.alpha = 0
     restart.alpha = 0 
     menu.alpha = 0
-    soundon.alpha = 0
-    soundoff.alpha = 0
     audio.play(bgSound)
     paused = false
     timer.resume(timerDown)
@@ -440,7 +436,7 @@ end
 resume:addEventListener("tap", resumeGame)
 
 --Adiciona o cronômetro
-local tempo = display.newText( "2:00", 0, 0, sansSerif, 50 )   
+local tempo = display.newText( "2:00", 0, 0, "DS-Digital", 60 )   
    tempo.x = _W/2
    tempo.y = _H/35
    
@@ -465,12 +461,13 @@ function timerDown()
   if number == 10 then
     tempo:setTextColor( 1, 0, 0 )
     countdown = audio.loadStream("sounds/contagem.mp3")
+  end  
+  if sound == true then 
     Song = audio.play(countdown)
   end  
 
   if(number == 0)then
-	  display.newText("TIME OUT", _W/2, _H/2, sansSerif, 100)
-    display.newText("touch to continue", _W/2, _H/2+60, sansSerif, 40)
+	  display.newText("TIME OUT", _W/2, _H/2, "DS-Digital", 150)
     display.remove(instance1)
     display.remove(instance2)
     display.remove(ball)
@@ -489,6 +486,8 @@ function timerDown()
     display.remove(fisicacesta1)
     display.remove(ballfloor)
     pause:removeEventListener("tap", pauseGame)
+    soundon:removeEventListener("tap", muteGame)
+    soundoff:removeEventListener("tap", muteGame)
     audio.stop()
    end
 end
