@@ -4,3 +4,17 @@ display.setStatusBar(display.HiddenStatusBar)
 -- Requisita o storyboard e vai para a tela do jogo
 local storyboard = require "storyboard"
 storyboard.gotoScene("menu")
+
+--transição de telas	
+	transicaoCena = {
+		effect = "fade",
+		time = 200,
+		params = {
+			someKey = "someValue",
+			someOtherKey = 10
+		}
+	}
+
+sound = true
+
+score = 0

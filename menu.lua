@@ -88,11 +88,13 @@ local instance2 = display.newSprite( sheet2, { name="bird", start=1, count=4, ti
 end   
 
 local function start_game()
-	storyboard.gotoScene("game")
+	storyboard.gotoScene("game", transicaoCena)
 end	
 
 function scene:enterScene( event )
   start:addEventListener("tap",start_game)
+  storyboard.removeScene("game")
+  storyboard.removeScene("score")
 end
 
 function scene:exitScene( event )

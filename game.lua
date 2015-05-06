@@ -13,88 +13,109 @@ _H = display.contentHeight
 
 --Adiciona som ao game
 bgSound = audio.loadStream("sounds/game.mp3")
-mySong = audio.play(bgSound)
+
+function scene:createScene(event)
+local group = self.view
 
 --Adiciona o background
 local background = display.newImage("images/background.jpg")
 	background.x = _W/2
 	background.y = _H/2
+  group:insert(background)
 
 --Adiciona imagens de valores às cestas
 local um = display.newImage("images/1.png")
   um.x = 70
   um.y = _H-450
-  um.alpha = 0.3   
+  um.alpha = 0.3 
+  group:insert(um)  
 
 local dois = display.newImage("images/2.png")
   dois.x = _W-80
   dois.y = _H/2-160
-  dois.alpha = 0.3  
+  dois.alpha = 0.3 
+  group:insert(dois) 
 
 local tres = display.newImage("images/3.png")
   tres.x = 80
   tres.y = 100
-  tres.alpha = 0.3  
+  tres.alpha = 0.3 
+  group:insert(tres) 
 
 --Adiciona o botão de pausa e de som
 local pause = display.newImage("images/pause.png")
   pause.x = _W-30
   pause.y = _H-30
+  group:insert(pause)
 
 local soundon = display.newImage("images/soundon.png")
   soundon.x = _W-90
   soundon.y = _H-30
   soundon.alpha = 1  
+  group:insert(soundon)
 
 local soundoff = display.newImage("images/soundoff.png")
   soundoff.x = _W-90
   soundoff.y = _H-30
   soundoff.alpha = 0  
+  group:insert(soundoff)
 
 --Adiciona física de pontuação das cestas
 local fisicacesta1 = display.newRect (80, _H/5-30, 90, 0)  
   fisica.addBody(fisicacesta1, "kinematic")
-  fisicacesta1.isSensor = true    
+  fisicacesta1.isSensor = true
+  group:insert(fisicacesta1)    
 
 local fisicacesta2 = display.newRect (_W-80, _H-550-30 , 90, 0)  
   fisica.addBody(fisicacesta2, "kinematic")
   fisicacesta2.isSensor = true    
+  group:insert(fisicacesta2)
 
 local fisicacesta3 = display.newRect (80, _H-350-30, 90, 0)  
   fisica.addBody(fisicacesta3, "kinematic")
-  fisicacesta3.isSensor = true  
+  fisicacesta3.isSensor = true 
+  group:insert(fisicacesta3) 
 
 --Fisica da parte de baixo das cestas
 local fisicabaixo1 = display.newRect (80, _H/5+50, 90, 0)  
   fisica.addBody(fisicabaixo1, "static")
+  group:insert(fisicabaixo1)
 
 local fisicabaixo2 = display.newRect (_W-80, _H/2-20, 90, 0)  
   fisica.addBody(fisicabaixo2, "static")
+  group:insert(fisicabaixo2)
 
 local fisicabaixo3 = display.newRect (80, _H-300, 90, 0)  
-  fisica.addBody(fisicabaixo3, "static")  
+  fisica.addBody(fisicabaixo3, "static")
+  group:insert(fisicabaixo3)  
 
 local ballfloor = display.newRect (_W/2, _H-100, 90, 0)  
   physics.addBody(ballfloor, "static") 
-  ballfloor.isSensor = false                            
+  ballfloor.isSensor = false  
+  group:insert(ballfloor)                          
 
 --Adiciona o contador de score
-local score = 0
 local scoreNumber = display.newText(score, 142, _H-23, "DS-Digital", 50)
+group:insert(scoreNumber)
 local scoreText = display.newText("Score:", 65, _H-21, "DS-Digital", 40)
+group:insert(scoreText)
 
 --Adiciona as paredes, o chão e o teto
 local chao = display.newRect (0, _H, _W*2, 0)
 	fisica.addBody(chao, "static")
+  group:insert(chao)
 
 local teto = display.newRect (0, 0, _W*2, 0)
 	fisica.addBody(teto, "static")	
+  group:insert(teto)
 
 local esquerda = display.newRect (0, 0, 0, _H*2)
 	fisica.addBody(esquerda, "static")
+  group:insert(esquerda)
 
 local direita = display.newRect (_W, 0, 0, _H*2)
 	fisica.addBody(direita, "static")
+  group:insert(direita)
 
 --Adiciona a bola de basquete
 local ball = display.newImage("images/ball.png")
@@ -103,6 +124,7 @@ local ball = display.newImage("images/ball.png")
   ball.y = _H-130 
   ball.xScale = 0.7
   ball.yScale = 0.7 
+  group:insert(ball)
 
 --Função que incrementa a pontuação das cestas  
 local function onLocalCollision( self, event )
@@ -153,16 +175,19 @@ local basket = display.newImage("images/basket.png")
 	fisica.addBody(basket, "static", unpack(physics_body["basket"]))
   basket.x = 80
 	basket.y = _H/5
+  group:insert(basket)
 
 local basket2 = display.newImage("images/basket.png")
 	fisica.addBody(basket2, "static", unpack(physics_body["basket"]))
   basket2.x = _W-80
-	basket2.y = _H-550  
+	basket2.y = _H-550 
+  group:insert(basket2) 
 
 local basket3 = display.newImage("images/basket.png")
 	fisica.addBody(basket3, "static", unpack(physics_body["basket"]))
   basket3.x = 80
 	basket3.y = _H-350
+  group:insert(basket3)
 
 --Função para movimentar as cestas
 local function move_3()
@@ -275,6 +300,7 @@ local instance1 = display.newSprite( sheet1, { name="bird", start=1, count=4, ti
   instance1.xScale = 0.9
   instance1.yScale = 0.9
   instance1:play()
+  group:insert(instance1)
 
 local function move_bird( bird )
   instance1.x = -500
@@ -292,6 +318,7 @@ local instance2 = display.newSprite( sheet2, { name="bird2", start=1, count=4, t
   instance2.xScale = 0.9
   instance2.yScale = 0.9
   instance2:play()
+  group:insert(instance2)
 
 local function move_bird2( bird )
   instance2.x = _W+100
@@ -340,7 +367,7 @@ move_bird2( instance2 )
           ballfloor.isSensor = true 
         end
           
-      --Golpei a bola:
+      --Golpeia a bola:
       local ballforce
         t:applyForce( (t.x - event.x), (t.y - event.y), t.x, t.y )
       end
@@ -356,6 +383,7 @@ local pausebg = display.newImage("images/pausebg.png")
   pausebg.xScale = 0.8
   pausebg.yScale = 0.8
   pausebg.alpha = 0
+  group:insert(pausebg)
 
 local resume = display.newImage("images/resume.png")
   resume.x = _W/2
@@ -363,6 +391,7 @@ local resume = display.newImage("images/resume.png")
   resume.xScale = 0.4
   resume.yScale = 0.4
   resume.alpha = 0
+  group:insert(resume)
 
 local restart = display.newImage("images/restart.png")
   restart.x = _W/2
@@ -370,6 +399,7 @@ local restart = display.newImage("images/restart.png")
   restart.xScale = 0.4
   restart.yScale = 0.4
   restart.alpha = 0
+  group:insert(restart)
 
 local menu = display.newImage("images/menu.png")
   menu.x = _W/2
@@ -377,6 +407,7 @@ local menu = display.newImage("images/menu.png")
   menu.xScale = 0.4
   menu.yScale = 0.4
   menu.alpha = 0
+  group:insert(menu)
 
 --Função para tirar o som no menu de pause
 sound = true
@@ -396,6 +427,12 @@ local function unmuteGame()
   end 
 soundoff:addEventListener("tap", unmuteGame)
 
+--Função que leva a tela de jogo de volta para o menu
+function game_menu()
+  storyboard.gotoScene("menu")
+end
+  menu:addEventListener("tap",game_menu)
+
 --Variável de pausa
 local paused = false
 
@@ -413,6 +450,7 @@ local function pauseGame()
     audio.stop()
     paused = true 
     timer.pause(timerDown)
+    ball:removeEventListener("touch", ball)
   end 
 end 
 pause:addEventListener("tap", pauseGame)
@@ -431,6 +469,10 @@ local function resumeGame()
     audio.play(bgSound)
     paused = false
     timer.resume(timerDown)
+    ball:addEventListener("touch", ball)
+  end
+  if sound == false then
+    audio.pause()
   end
 end
 resume:addEventListener("tap", resumeGame)
@@ -439,8 +481,9 @@ resume:addEventListener("tap", resumeGame)
 local tempo = display.newText( "2:00", 0, 0, "DS-Digital", 60 )   
    tempo.x = _W/2
    tempo.y = _H/35
+   group:insert(tempo)
    
-local number = 120
+local number = 15
 local modf = math.modf
 
 function timerDown()
@@ -457,17 +500,67 @@ function timerDown()
   local sec = seconds < 10 and ("0".. seconds) or seconds
 
   tempo.text = min .. ":" .. sec
+  group:insert(tempo)
 
-  if number == 10 then
-    tempo:setTextColor( 1, 0, 0 )
-    countdown = audio.loadStream("sounds/contagem.mp3")
-  end  
-  if sound == true then 
-    Song = audio.play(countdown)
-  end  
+  function countdown_red()
+    if number == 10 then
+      tempo:setTextColor( 1, 0, 0 )  
+        if sound == true then
+          countdown = audio.loadStream("sounds/contagem.mp3")
+          Song = audio.play(countdown)
+        end
+    end 
+  end
+  countdown_red()
 
   if(number == 0)then
-	  display.newText("TIME OUT", _W/2, _H/2, "DS-Digital", 150)
+	  local timeout = display.newText("TIME OUT", _W/2, _H/2, "DS-Digital", 150)
+    group:insert(timeout)
+    local continue = display.newText("Touch to continue", _W/2, _H/2+100, "DS-Digital", 50)
+    group:insert(continue)
+    display.remove(instance1)
+    display.remove(instance2)
+    display.remove(ball)
+    display.remove(basket)
+    display.remove(basket2)
+    display.remove(basket3) 
+    display.remove(um)
+    display.remove(dois)
+    display.remove(tres)
+    display.remove(fisicacesta1)
+    display.remove(fisicabaixo1)
+    display.remove(fisicacesta2)
+    display.remove(fisicabaixo2)
+    display.remove(fisicacesta3)
+    display.remove(fisicabaixo3)
+    display.remove(fisicacesta1)
+    display.remove(ballfloor)
+    display.remove(myLine)
+    pause:removeEventListener("tap", pauseGame)
+    soundon:removeEventListener("tap", muteGame)
+    soundoff:removeEventListener("tap", muteGame)
+    audio.stop()
+    function goto_score()
+      storyboard.gotoScene("score", transicaoCena)
+    end
+    Runtime:addEventListener("tap", goto_score)
+   end
+end
+timerDown = timer.performWithDelay(1000, timerDown, number)
+
+end
+scene:addEventListener("createScene", scene)
+
+function scene:enterScene(event)
+  local group = self.view;
+    storyboard.removeScene("menu")
+    storyboard.removeScene("score") 
+    BgSoundChannelGame = audio.play(bgSound, {channel = 4, loops = -1}); 
+end
+scene:addEventListener("enterScene", scene)
+
+function scene:exitScene(event)
+    local group = self.view
     display.remove(instance1)
     display.remove(instance2)
     display.remove(ball)
@@ -485,13 +578,11 @@ function timerDown()
     display.remove(fisicabaixo3)
     display.remove(fisicacesta1)
     display.remove(ballfloor)
-    pause:removeEventListener("tap", pauseGame)
-    soundon:removeEventListener("tap", muteGame)
-    soundoff:removeEventListener("tap", muteGame)
-    audio.stop()
-   end
+    display.remove(myLine)
+    Runtime:removeEventListener("tap", goto_score)
+    audio.stop();
 end
-timerDown = timer.performWithDelay(1000, timerDown, number)
+scene:addEventListener("exitScene", scene)
 
 return scene
 
