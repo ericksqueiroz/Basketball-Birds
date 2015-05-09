@@ -17,4 +17,3 @@ storyboard.gotoScene("menu")
 
 sound = true
 
-score = 0
