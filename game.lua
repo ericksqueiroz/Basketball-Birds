@@ -97,9 +97,9 @@ function scene:createScene(event)
   --Adiciona o contador de score
   local score = 0
   scoreFinal = 0
-  scoreNumber = display.newText(score, 142, _H-23, "DS-Digital", 50)
+  scoreNumber = display.newText(score, 142, _H-23, "Digital-7", 50)
     group:insert(scoreNumber)
-  scoreText = display.newText("Score:", 65, _H-21, "DS-Digital", 40)
+  scoreText = display.newText("Score:", 65, _H-21, "Digital-7", 40)
     group:insert(scoreText)
 
   --Adiciona as paredes, o chão e o teto
@@ -504,9 +504,9 @@ function scene:createScene(event)
   resume:addEventListener("tap", resumeGame)
 
   --Adiciona o cronômetro
-  local tempo = display.newText( "2:00", 0, 0, "DS-Digital", 60 )   
+  local tempo = display.newText( "2:00", 0, 0, "Digital-7", 70 )   
     tempo.x = _W/2
-    tempo.y = _H/35
+    tempo.y = 30
     group:insert(tempo)
    
   local number = 120
@@ -540,9 +540,9 @@ function scene:createScene(event)
     countdown_red()
 
   if(number == 0)then
-	  local timeout = display.newText("TIME OUT", _W/2, _H/2, "DS-Digital", 150)
+	  local timeout = display.newText("TIME OUT", _W/2, _H/2, "Digital-7", 150)
     group:insert(timeout)
-    local continue = display.newText("Touch to continue", _W/2, _H/2+100, "DS-Digital", 50)
+    local continue = display.newText("Touch to continue", _W/2, _H/2+100, "Digital-7", 50)
     group:insert(continue)
     display.remove(instance1)
     display.remove(instance2)

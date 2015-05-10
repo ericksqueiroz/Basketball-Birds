@@ -20,7 +20,7 @@ function scene:createScene(event)
     group:insert(background)
 
   --Cria "Your Score" e aplica efeito de pulsação
-  scores = display.newText("Your Score", _W/2, 150, "DS-Digital", 80)
+  scores = display.newText("Your Score", _W/2, 150, "Digital-7", 80)
     group:insert(scores)
 
   function movescoreUp()
@@ -34,7 +34,7 @@ function scene:createScene(event)
   movescoreUp();
 
   scoreFinal = (scoreFinal)
-  pontuacaoFinal = display.newText(scoreFinal, _W/2, _H/2-200, "DS-Digital", 150)
+  pontuacaoFinal = display.newText(scoreFinal, _W/2, _H/2-200, "Digital-7", 150)
     group:insert(pontuacaoFinal)
 
   --Adiciona o pássaro vermelho
