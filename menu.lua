@@ -53,7 +53,7 @@ function scene:createScene( event )
   --Adiciona o menu de ferramentas
   local settingsbg = display.newImage("images/settingsbg.png")
     settingsbg.x = _W/2
-    settingsbg.y = _H/2 + 130
+    settingsbg.y = _H/2 + 130 
     settingsbg.xScale = 0.9
     settingsbg.yScale = 0.9
     settingsbg.alpha = 0
@@ -97,18 +97,24 @@ function scene:createScene( event )
 
   local function start_game()
     storyboard.gotoScene("game", transicaoCena)
-end	 
+  end	 
+
+  local function goto_credits()
+    storyboard.gotoScene("credit", transicaoCena)
+end  
 
 function scene:enterScene( event )
-  start:addEventListener("tap",start_game)
+  start:addEventListener("tap", start_game)
+  credits:addEventListener("tap", goto_credits)
   storyboard.removeScene("game")
   storyboard.removeScene("score")
+  storyboard.removeScene("credit")
   mySong1 = audio.play( bgSound1, { channel = 1, loops = -1 } )
 end
 
 function scene:exitScene( event )
   start:removeEventListener("tap",start_game)
-  audio.stop( )
+  credits:removeEventListener("tap", goto_credits) 
 end
 
 -- Recebe os metodos criados

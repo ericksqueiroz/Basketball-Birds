@@ -577,6 +577,7 @@ end
 
 function scene:enterScene(event)
   local group = self.view;
+    audio.stop()
     storyboard.removeScene("menu")
     storyboard.removeScene("score") 
     BgSoundChannelGame = audio.play(bgSound, {channel = 4, loops = -1}); 
