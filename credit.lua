@@ -14,7 +14,7 @@ function scene:createScene( event )
   --Adiciona o botão de creditos
   back = display.newImage("images/back.png")
     back.x = _W/2 
-    back.y = _H/2 + 270
+    back.y = _H - 80
     back.xScale = 0.4
     back.yScale = 0.4  
     group:insert(back) 

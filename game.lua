@@ -23,25 +23,6 @@ function scene:createScene(event)
     background.y = _H/2
     group:insert(background)
 
-  --Adiciona imagens de valores às cestas
-  local um = display.newImage("images/1.png")
-    um.x = 70
-    um.y = _H-450
-    um.alpha = 0.3 
-    group:insert(um)  
-
-  local dois = display.newImage("images/2.png")
-    dois.x = _W-80
-    dois.y = _H/2-160
-    dois.alpha = 0.3 
-    group:insert(dois) 
-
-  local tres = display.newImage("images/3.png")
-    tres.x = 80
-    tres.y = 100
-    tres.alpha = 0.3 
-    group:insert(tres) 
-
   --Adiciona o botão de pausa e de som
   local pause = display.newImage("images/pause.png")
     pause.x = _W-30
@@ -61,31 +42,31 @@ function scene:createScene(event)
     group:insert(soundoff)
 
   --Adiciona física de pontuação das cestas
-  local fisicacesta1 = display.newRect (80, _H/5-30, 90, 0)  
+  local fisicacesta1 = display.newRect (80, _H/5+20, 90, 0)  
     fisica.addBody(fisicacesta1, "kinematic")
     fisicacesta1.isSensor = true
     group:insert(fisicacesta1)    
 
-  local fisicacesta2 = display.newRect (_W-80, _H-550-30 , 90, 0)  
+  local fisicacesta2 = display.newRect (_W-80, _H-550+20 , 90, 0)  
     fisica.addBody(fisicacesta2, "kinematic")
     fisicacesta2.isSensor = true    
     group:insert(fisicacesta2)
 
-  local fisicacesta3 = display.newRect (80, _H-350-30, 90, 0)  
+  local fisicacesta3 = display.newRect (80, _H-350+20, 90, 0)  
     fisica.addBody(fisicacesta3, "kinematic")
     fisicacesta3.isSensor = true 
     group:insert(fisicacesta3) 
 
   --Fisica da parte de baixo das cestas
-  local fisicabaixo1 = display.newRect (80, _H/5+50, 90, 0)  
+  local fisicabaixo1 = display.newRect (80, _H/5+90, 70, 0)  
     fisica.addBody(fisicabaixo1, "static")
     group:insert(fisicabaixo1)
 
-  local fisicabaixo2 = display.newRect (_W-80, _H/2-20, 90, 0)  
+  local fisicabaixo2 = display.newRect (_W-80, _H/2+20, 70, 0)  
     fisica.addBody(fisicabaixo2, "static")
     group:insert(fisicabaixo2)
 
-  local fisicabaixo3 = display.newRect (80, _H-300, 90, 0)  
+  local fisicabaixo3 = display.newRect (80, _H/2+220, 70, 0)  
     fisica.addBody(fisicabaixo3, "static")
     group:insert(fisicabaixo3)  
 
@@ -128,62 +109,29 @@ function scene:createScene(event)
     ball.yScale = 0.7 
     group:insert(ball)
 
-  --Função que incrementa a pontuação das cestas  
-  local function onLocalCollision( self, event )
-    if ( event.phase == "began" ) then
-      if event.other == fisicacesta1 then
-          scoreNumber.text = tostring(tonumber(scoreNumber.text) + 3)
-          scoreFinal = tonumber(scoreNumber.text)
-          fisicabaixo1.isSensor = true
-      end
-     if event.other == fisicacesta2 then
-          scoreNumber.text = tostring(tonumber(scoreNumber.text) + 2)
-          scoreFinal = tonumber(scoreNumber.text)
-          fisicabaixo2.isSensor = true
-     end
-     if event.other == fisicacesta3 then
-          scoreNumber.text = tostring(tonumber(scoreNumber.text) + 1 )
-          scoreFinal = tonumber(scoreNumber.text)
-          fisicabaixo3.isSensor = true
-      end
-      if event.other == chao then
-        fisicabaixo1.isSensor = false
-       fisicabaixo2.isSensor = false
-       fisicabaixo3.isSensor = false
-       ballfloor.isSensor = false
-       timer.performWithDelay( 300, resetaBola)
-       ball:setLinearVelocity( 0, 0 )
-       ball.angularVelocity = 0
-       ball:addEventListener("touch", ball)
-     end 
-   end  
-  end
-  ball.collision = onLocalCollision
-  ball:addEventListener( "collision", ball )  
-
   --Física da cesta
   local physics_body = {}
     physics_body["basket"] = {
       {
-          --LeftArm
-          density = 10, friction = 10, bounce = 0.15, 
-          shape = {-40, 50, -55, 50, -60, -55, -80, -55}
+        --LeftArm
+        density = 10, friction = 10, bounce = 0.15, 
+        shape = {-35, 90, -35, 90, -60, -19, -70, -19}
       },
       {
-          --RightArm
-          density = 10, friction = 10, bounce = 0.15, 
-          shape = {40, 50, 55, 50, 60, -55, 80, -55}
+        --RightArm
+        density = 10, friction = 10, bounce = 0.15, 
+        shape = {35, 90, 35, 90, 60, -19, 70, -19}
       }
     }  
 
   --Adiciona as cestas de basquete
-  local basket = display.newImage("images/basket.png")
+  local basket = display.newImage("images/basket3.png")
   	fisica.addBody(basket, "static", unpack(physics_body["basket"]))
     basket.x = 80
     basket.y = _H/5
     group:insert(basket)
 
-  local basket2 = display.newImage("images/basket.png")
+  local basket2 = display.newImage("images/basket2.png")
     fisica.addBody(basket2, "static", unpack(physics_body["basket"]))
     basket2.x = _W-80
 	  basket2.y = _H-550 
@@ -196,14 +144,6 @@ function scene:createScene(event)
     group:insert(basket3)
 
   --Função para movimentar as cestas
-  local function move_3()
-    local move_3back = function()
-      transition.to( tres, {x=80, time=2000, onComplete=move_3} )
-    end
-      transition.to( tres, {x=_W-80, time=2000, onComplete=move_3back} )
-    end
-  move_3()
-
   local function move_linha1()
     local move_linhaback1 = function()
       transition.to( fisicacesta1, {x=80, time=2000, onComplete=move_linha1} )
@@ -229,14 +169,6 @@ function scene:createScene(event)
   move_basket1( basket1 )  
   -----------------------------------------------------------------------------------------
   -----------------------------------------------------------------------------------------
-  local function move_2()
-    local move_2back = function()
-      transition.to( dois, {x=_W-80, time=3000, onComplete=move_2} )
-    end
-      transition.to( dois, {x=80, time=3000, onComplete=move_2back} )
-  end
-  move_2()
-
   local function move_linha2()
     local move_linhaback2 = function()
       transition.to( fisicacesta2, {x=_W-80, time=3000, onComplete=move_linha2} )
@@ -261,15 +193,7 @@ function scene:createScene(event)
   end
   move_basket2()  
   -----------------------------------------------------------------------------------------
-  -----------------------------------------------------------------------------------------
-  local function move_1()
-    local move_1back = function()
-      transition.to( um, {x=70, time=3000, onComplete=move_1} )
-    end
-      transition.to( um, {x=_W-90, time=3000, onComplete=move_1back} )
-  end
-  move_1()
-
+  ----------------------------------------------------------------------------------------- 
   local function move_linha3()
     local move_linhaback3 = function()
       transition.to( fisicacesta3, {x=80, time=3000, onComplete=move_linha3} )
@@ -292,23 +216,26 @@ function scene:createScene(event)
     end
       transition.to( basket3, {x=_W-80, time=3000, onComplete=move_basketback3} )
   end
-  move_basket3()  
+  move_basket3() 
   -----------------------------------------------------------------------------------------
   -----------------------------------------------------------------------------------------
-
   --Adiciona o pássaro vermelho
   local sheet1 = graphics.newImageSheet( "images/bird2.png", { width=125, height=85, numFrames=4 } )
 
   --Cria o sprite do pássaro vermelho
   local instance1 = display.newSprite( sheet1, { name="bird", start=1, count=4, time=500 } )
     fisica.addBody(instance1, "static", {radius=40, density=0, friction=1, bounce=0.5})
-    instance1.y = _H/2+30
+    instance1.y = _H/2+70
     instance1.xScale = 0.9
     instance1.yScale = 0.9
     instance1:play()
     group:insert(instance1)
 
   local function move_bird( bird )
+    if instance1.alpha == 0 then
+      instance1.alpha = 1
+    end  
+    instance1.rotation = -5
     instance1.x = -500
     transition.to( instance1, {x=400+800, time=7000, onComplete=move_bird} )
   end
@@ -320,17 +247,74 @@ function scene:createScene(event)
   --Cria o sprite do pássaro azul
   local instance2 = display.newSprite( sheet2, { name="bird2", start=1, count=4, time=500 } )
     fisica.addBody(instance2, "static", {radius=40, density=0, friction=1, bounce=0.5})
-    instance2.y = _H/2-180
+    instance2.y = _H/2-150
     instance2.xScale = 0.9
     instance2.yScale = 0.9
     instance2:play()
     group:insert(instance2)
 
   local function move_bird2( bird )
+    if instance2.alpha == 0 then
+      instance2.alpha = 1
+    end  
+    instance2.rotation = 5
     instance2.x = _W+100
     transition.to( instance2, {x=400-800, time=7000, onComplete=move_bird2} )
   end
   move_bird2( instance2 )
+
+  --Função que incrementa a pontuação das cestas e adiciona evento de colisão dos pássaros  
+  local function onLocalCollision( self, event )
+    if ( event.phase == "began" ) then
+      if event.other == fisicacesta1 then
+          scoreNumber.text = tostring(tonumber(scoreNumber.text) + 3)
+          scoreFinal = tonumber(scoreNumber.text)
+          fisicabaixo1.isSensor = true
+      end
+      if event.other == fisicacesta2 then
+          scoreNumber.text = tostring(tonumber(scoreNumber.text) + 2)
+          scoreFinal = tonumber(scoreNumber.text)
+          fisicabaixo2.isSensor = true
+      end
+      if event.other == fisicacesta3 then
+          scoreNumber.text = tostring(tonumber(scoreNumber.text) + 1 )
+          scoreFinal = tonumber(scoreNumber.text)
+          fisicabaixo3.isSensor = true
+      end
+      if event.other == chao then
+        fisicabaixo1.isSensor = false
+        fisicabaixo2.isSensor = false
+        fisicabaixo3.isSensor = false
+        ballfloor.isSensor = false
+        timer.performWithDelay( 300, resetaBola)
+        ball:setLinearVelocity( 0, 0 )
+        ball.angularVelocity = 0
+        ball:addEventListener("touch", ball)
+      end 
+      if event.other == instance2 then
+        transition.cancel(instance2)
+        local function animate( event )
+          transition.to( instance2, { rotation = instance2.rotation +720, time=1000, onComplete=move_bird2 } )
+          transition.to( instance2, {alpha = 0, time=700})
+          deadbird2 = audio.loadStream("sounds/deadbird2.mp3")
+          Song = audio.play(deadbird2)
+        end
+        animate()
+      end 
+      if event.other == instance1 then
+        transition.cancel(instance1)
+        local function animate( event )
+          transition.to( instance1, { rotation = instance1.rotation +720, time=1000, onComplete=move_bird } )
+          transition.to( instance1, {alpha = 0, time=700})
+          deadbird = audio.loadStream("sounds/deadbird.mp3")
+          Song = audio.play(deadbird)
+        end
+        animate()
+      end 
+    end  
+  end
+  ball.collision = onLocalCollision
+  ball:addEventListener( "collision", ball )  
 
   --Funcao para resetar a bola:
   function resetaBola()
