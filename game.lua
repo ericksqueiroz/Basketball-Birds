@@ -13,6 +13,8 @@ _H = display.contentHeight
 
 --Adiciona som ao game
 bgSound = audio.loadStream("sounds/game.mp3")
+deadbird2 = audio.loadStream("sounds/deadbird2.mp3")
+deadbird = audio.loadStream("sounds/deadbird.mp3")
 
 function scene:createScene(event)
   local group = self.view
@@ -31,14 +33,12 @@ function scene:createScene(event)
 
   local soundon = display.newImage("images/soundon.png")
     soundon.x = _W-90
-    soundon.y = _H-30
-    soundon.alpha = 1  
+    soundon.y = _H-30 
     group:insert(soundon)
 
   local soundoff = display.newImage("images/soundoff.png")
     soundoff.x = _W-90
-    soundoff.y = _H-30
-    soundoff.alpha = 0  
+    soundoff.y = _H-30 
     group:insert(soundoff)
 
   --Adiciona física de pontuação das cestas
@@ -296,8 +296,9 @@ function scene:createScene(event)
         local function animate( event )
           transition.to( instance2, { rotation = instance2.rotation +720, time=1000, onComplete=move_bird2 } )
           transition.to( instance2, {alpha = 0, time=700})
-          deadbird2 = audio.loadStream("sounds/deadbird2.mp3")
-          Song = audio.play(deadbird2)
+          if sound == true then
+            Song = audio.play(deadbird2)
+          end  
         end
         animate()
       end 
@@ -306,8 +307,9 @@ function scene:createScene(event)
         local function animate( event )
           transition.to( instance1, { rotation = instance1.rotation +720, time=1000, onComplete=move_bird } )
           transition.to( instance1, {alpha = 0, time=700})
-          deadbird = audio.loadStream("sounds/deadbird.mp3")
-          Song = audio.play(deadbird)
+          if sound == true then 
+            Song = audio.play(deadbird)
+          end  
         end
         animate()
       end 
@@ -400,8 +402,17 @@ function scene:createScene(event)
     menu.alpha = 0
     group:insert(menu)
 
+  --Inicia os botões de som de acordo com a escolha do menu
+  if sound == true then
+    soundon.alpha = 1
+    soundoff.alpha = 0
+  end
+  if sound == false then
+    soundon.alpha = 0
+    soundoff.alpha = 1
+  end  
+
   --Função para tirar o som no menu de pause
-  sound = true
   local function muteGame()  
     sound = false
     soundon.alpha = 0
@@ -410,11 +421,12 @@ function scene:createScene(event)
   end 
   soundon:addEventListener("tap", muteGame)
 
-  local function unmuteGame()
+  local function unmuteGame() 
     sound = true  
     soundon.alpha = 1
     soundoff.alpha = 0
     audio.resume()
+    BgSoundChannelGame = audio.play(bgSound, {channel = 4, loops = -1}); 
   end 
   soundoff:addEventListener("tap", unmuteGame)
 
@@ -564,7 +576,9 @@ function scene:enterScene(event)
     audio.stop()
     storyboard.removeScene("menu")
     storyboard.removeScene("score") 
-    BgSoundChannelGame = audio.play(bgSound, {channel = 4, loops = -1}); 
+    if sound == true then
+      BgSoundChannelGame = audio.play(bgSound, {channel = 4, loops = -1}); 
+    end  
 end
 
 function scene:exitScene(event)

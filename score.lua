@@ -8,7 +8,6 @@ local scene = storyboard.newScene()
 
 --Adiciona som ao game
 bgSound = audio.loadStream("sounds/score.mp3")
-mySong = audio.play(bgSound, { channel = 1, loops = -1 })
 
 function scene:createScene(event)
   local group = self.view
@@ -170,7 +169,9 @@ function scene:enterScene(event)
   local group = self.view;
   storyboard.removeScene("menu")
   storyboard.removeScene("game")
-  bgSoundChannelGame = audio.play(bgSound, {channel = 4, loops = -1});
+  if sound == true then  
+    bgSoundChannelGame = audio.play(bgSound, {channel = 4, loops = -1});
+  end  
 end
 
 function scene:exitScene( event )

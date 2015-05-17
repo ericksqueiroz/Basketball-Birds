@@ -29,13 +29,9 @@ function scene:enterScene( event )
   storyboard.removeScene("menu")
 end
 
-
-
 -- Recebe os metodos criados
 scene:addEventListener( "createScene", scene )
 
 scene:addEventListener( "enterScene", scene )
-
-
 
 return scene	    

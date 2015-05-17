@@ -59,7 +59,48 @@ function scene:createScene( event )
     settingsbg.alpha = 0
     group:insert(settingsbg)
 
+  local soundon = display.newImage("images/soundon.png")  
+    soundon.x = _W/2
+    soundon.y = _H/2 + 150
+    soundon.xScale = 2
+    soundon.yScale = 2
+    soundon.alpha = 0
+    group:insert(soundon)
+
+  local soundoff = display.newImage("images/soundoff.png")  
+    soundoff.x = _W/2
+    soundoff.y = _H/2 + 150
+    soundoff.xScale = 2
+    soundoff.yScale = 2
+    soundoff.alpha = 0 
+    group:insert(soundoff)
+
+  local function muteGame()  
+    sound = false
+    soundon.alpha = 0
+    soundoff.alpha = 1
+    audio.pause()
+  end 
+  soundon:addEventListener("tap", muteGame)
+
+  local function unmuteGame()
+    sound = true  
+    soundon.alpha = 1
+    soundoff.alpha = 0
+    audio.resume()
+    mySong1 = audio.play( bgSound1, { channel = 1, loops = -1 } )
+  end 
+  soundoff:addEventListener("tap", unmuteGame)
+
   function settingsMenu()
+    if sound == true then
+      soundon.alpha = 1
+      soundoff.alpha = 0
+    end
+    if sound == false then
+      soundon.alpha = 0
+      soundoff.alpha = 1
+    end  
     if settingsbg.alpha == 0 then
       settingsbg.alpha = 1 
       start.alpha = 0
@@ -68,6 +109,8 @@ function scene:createScene( event )
       settingsbg.alpha = 0
       start.alpha = 1
       credits.alpha = 1
+      soundon.alpha = 0
+      soundoff.alpha = 0
     end 
   end
   settings:addEventListener("tap", settingsMenu)   
@@ -109,7 +152,9 @@ function scene:enterScene( event )
   storyboard.removeScene("game")
   storyboard.removeScene("score")
   storyboard.removeScene("credit")
-  mySong1 = audio.play( bgSound1, { channel = 1, loops = -1 } )
+  if sound == true then 
+    mySong1 = audio.play( bgSound1, { channel = 1, loops = -1 } )
+  end  
 end
 
 function scene:exitScene( event )
