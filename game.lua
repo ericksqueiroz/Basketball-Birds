@@ -235,6 +235,7 @@ function scene:createScene(event)
     if instance1.alpha == 0 then
       instance1.alpha = 1
     end  
+    instance1.isSensor = false
     instance1.rotation = -5
     instance1.x = -500
     transition.to( instance1, {x=400+800, time=7000, onComplete=move_bird} )
@@ -257,6 +258,7 @@ function scene:createScene(event)
     if instance2.alpha == 0 then
       instance2.alpha = 1
     end  
+    instance2.isSensor = false
     instance2.rotation = 5
     instance2.x = _W+100
     transition.to( instance2, {x=400-800, time=7000, onComplete=move_bird2} )
@@ -291,24 +293,26 @@ function scene:createScene(event)
         ball.angularVelocity = 0
         ball:addEventListener("touch", ball)
       end 
-      if event.other == instance2 then
-        transition.cancel(instance2)
-        local function animate( event )
-          transition.to( instance2, { rotation = instance2.rotation +720, time=1000, onComplete=move_bird2 } )
-          transition.to( instance2, {alpha = 0, time=700})
-          if sound == true then
-            Song = audio.play(deadbird2)
-          end  
-        end
-        animate()
-      end 
       if event.other == instance1 then
         transition.cancel(instance1)
         local function animate( event )
+          instance1.isSensor = true
           transition.to( instance1, { rotation = instance1.rotation +720, time=1000, onComplete=move_bird } )
           transition.to( instance1, {alpha = 0, time=700})
           if sound == true then 
             Song = audio.play(deadbird)
+          end  
+        end
+        animate()
+      end 
+      if event.other == instance2 then
+        transition.cancel(instance2)
+        local function animate( event )
+          instance2.isSensor = true
+          transition.to( instance2, { rotation = instance2.rotation +720, time=1000, onComplete=move_bird2 } )
+          transition.to( instance2, {alpha = 0, time=700})
+          if sound == true then
+            Song = audio.play(deadbird2)
           end  
         end
         animate()
