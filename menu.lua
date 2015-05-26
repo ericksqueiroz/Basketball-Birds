@@ -29,18 +29,26 @@ function scene:createScene( event )
   --Adiciona o botão de start
   start = display.newImage("images/start.png")
 	  start.x = _W/2 
-	  start.y = _H/2 + 150
+	  start.y = _H/2 + 100
 	  start.xScale = 0.4
 	  start.yScale = 0.4	
     group:insert(start)
 
+  --Adiciona o botão de como jogar
+  htoplay = display.newImage("images/howtoplay.png")
+    htoplay.x = _W/2 
+    htoplay.y = _H/2 + 230
+    htoplay.xScale = 0.4
+    htoplay.yScale = 0.4  
+    group:insert(htoplay)  
+
   --Adiciona o botão de creditos
   credits = display.newImage("images/credits.png")
     credits.x = _W/2 
-    credits.y = _H/2 + 270
+    credits.y = _H/2 + 360
     credits.xScale = 0.4
     credits.yScale = 0.4  
-    group:insert(credits)  
+    group:insert(credits)      
 
   --Adiciona o botão de ferramentas
   local settings = display.newImage("images/settings.png")
@@ -104,10 +112,12 @@ function scene:createScene( event )
     if settingsbg.alpha == 0 then
       settingsbg.alpha = 1 
       start.alpha = 0
+      htoplay.alpha = 0
       credits.alpha = 0
     else  
       settingsbg.alpha = 0
       start.alpha = 1
+      htoplay.alpha = 1
       credits.alpha = 1
       soundon.alpha = 0
       soundoff.alpha = 0
@@ -121,7 +131,7 @@ function scene:createScene( event )
   --Cria o sprite do pássaro cinza
   local instance1 = display.newSprite( sheet1, { name="bird", start=1, count=4, time=500 } ) 
     instance1.x = 90
-    instance1.y = _H/2 + 240
+    instance1.y = _H/2 + 200
     instance1.rotation = -20
     instance1:play() 
     group:insert(instance1) 
@@ -132,7 +142,7 @@ function scene:createScene( event )
   --Cria o sprite do pássaro amarelo 
   local instance2 = display.newSprite( sheet2, { name="bird", start=1, count=4, time=500 } ) 
     instance2.x = _W - 90
-    instance2.y = _H/2 + 240
+    instance2.y = _H/2 + 200
     instance2.rotation = 20
     instance2:play() 
     group:insert(instance2)   
@@ -142,15 +152,21 @@ function scene:createScene( event )
     storyboard.gotoScene("game", transicaoCena)
   end	 
 
+  local function goto_htoplay()
+    storyboard.gotoScene("howtoplay", transicaoCena)
+  end  
+
   local function goto_credits()
     storyboard.gotoScene("credit", transicaoCena)
 end  
 
 function scene:enterScene( event )
   start:addEventListener("tap", start_game)
+  htoplay:addEventListener("tap", goto_htoplay)
   credits:addEventListener("tap", goto_credits)
   storyboard.removeScene("game")
   storyboard.removeScene("score")
+  storyboard.removeScene("howtoplay")
   storyboard.removeScene("credit")
   if sound == true then 
     mySong1 = audio.play( bgSound1, { channel = 1, loops = -1 } )
@@ -158,7 +174,8 @@ function scene:enterScene( event )
 end
 
 function scene:exitScene( event )
-  start:removeEventListener("tap",start_game)
+  start:removeEventListener("tap", start_game)
+  htoplay:removeEventListener("tap", goto_htoplay)
   credits:removeEventListener("tap", goto_credits) 
 end
 

@@ -29,9 +29,15 @@ function scene:enterScene( event )
   storyboard.removeScene("menu")
 end
 
+function scene:exitScene( event )
+  back:removeEventListener("tap", goto_menu) 
+end
+
 -- Recebe os metodos criados
 scene:addEventListener( "createScene", scene )
 
 scene:addEventListener( "enterScene", scene )
+
+scene:addEventListener( "exitScene", scene )
 
 return scene	    

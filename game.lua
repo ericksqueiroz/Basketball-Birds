@@ -1,12 +1,12 @@
+--Requisita o storyboard e cria uma nova cena
+local storyboard = require("storyboard")
+local scene = storyboard.newScene()
+
 --Adiciona física e gravidade
 local fisica = require("physics")
 fisica.start()
 physics.setGravity( 0, 15 )
 --fisica.setDrawMode("hybrid")
-
---Requisita o storyboard e cria uma nova cena
-local storyboard = require("storyboard")
-local scene = storyboard.newScene()
 
 _W = display.contentWidth 
 _H = display.contentHeight
@@ -42,17 +42,17 @@ function scene:createScene(event)
     group:insert(soundoff)
 
   --Adiciona física de pontuação das cestas
-  local fisicacesta1 = display.newRect (80, _H/5+20, 90, 0)  
+  local fisicacesta1 = display.newRect (80, _H/5+15, 90, 0)  
     fisica.addBody(fisicacesta1, "kinematic")
     fisicacesta1.isSensor = true
     group:insert(fisicacesta1)    
 
-  local fisicacesta2 = display.newRect (_W-80, _H-550+20 , 90, 0)  
+  local fisicacesta2 = display.newRect (_W-80, _H-540 , 90, 0)  
     fisica.addBody(fisicacesta2, "kinematic")
     fisicacesta2.isSensor = true    
     group:insert(fisicacesta2)
 
-  local fisicacesta3 = display.newRect (80, _H-350+20, 90, 0)  
+  local fisicacesta3 = display.newRect (80, _H-335, 90, 0)  
     fisica.addBody(fisicacesta3, "kinematic")
     fisicacesta3.isSensor = true 
     group:insert(fisicacesta3) 
@@ -593,9 +593,6 @@ function scene:exitScene(event)
     display.remove(basket)
     display.remove(basket2)
     display.remove(basket3)
-    display.remove(um)
-    display.remove(dois)
-    display.remove(tres)
     display.remove(fisicacesta1)
     display.remove(fisicabaixo1)
     display.remove(fisicacesta2)
